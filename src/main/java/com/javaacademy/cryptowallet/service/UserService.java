@@ -2,6 +2,7 @@ package com.javaacademy.cryptowallet.service;
 
 import com.javaacademy.cryptowallet.entity.User;
 import com.javaacademy.cryptowallet.storage.UserStorage;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,8 @@ public class UserService {
         .orElseThrow(() -> new RuntimeException("Пользователя с таким логином нет."));
   }
 
-  public void saveUser(User user) {
+  public void saveUser(Map<String, String> newUser) {
+    User user = new User(newUser.get("login"), newUser.get("email"), newUser.get("password"));
     userStorage.saveUser(user);
   }
 
