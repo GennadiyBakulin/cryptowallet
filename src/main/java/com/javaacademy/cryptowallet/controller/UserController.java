@@ -20,7 +20,8 @@ public class UserController {
   }
 
   @PostMapping("/reset-password")
-  public void resetPassword(Map<String, String> map) {
-    userService.resetPassword(map.get("login"), map.get("old_password"), map.get("new_password"));
+  public void resetPassword(Map<String, String> updatePasswordMap) {
+    userService.resetPassword(updatePasswordMap.get("login"), updatePasswordMap.get("old_password"),
+        updatePasswordMap.get("new_password"));
   }
 }
