@@ -3,6 +3,7 @@ package com.javaacademy.cryptowallet.storage;
 import com.javaacademy.cryptowallet.entity.User;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -10,11 +11,8 @@ public class UserStorage {
 
   private final Map<String, User> userBd = new HashMap<>();
 
-  public User getUserByLogin(String login) {
-    if (userBd.containsKey(login)) {
-      return userBd.get(login);
-    }
-    throw new RuntimeException("Пользователя с таким логином нет.");
+  public Optional<User> getUserByLogin(String login) {
+    return Optional.ofNullable(userBd.get(login));
   }
 
   public void saveUser(User user) {
