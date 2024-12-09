@@ -9,7 +9,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CryptoStorage {
+public class CryptoAccountStorage {
 
   private final Map<UUID, CryptoAccount> cryptoAccountBd = new HashMap<>();
 
@@ -20,7 +20,7 @@ public class CryptoStorage {
     cryptoAccountBd.put(cryptoAccount.getUuid(), cryptoAccount);
   }
 
-  public Optional<CryptoAccount> getCryptoAccountByUUID(UUID uuid) {
+  public Optional<CryptoAccount> getCryptoAccountByUuid(UUID uuid) {
     return Optional.ofNullable(cryptoAccountBd.get(uuid));
   }
 
