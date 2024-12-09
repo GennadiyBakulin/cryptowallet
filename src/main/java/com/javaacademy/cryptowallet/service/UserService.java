@@ -19,7 +19,7 @@ public class UserService {
 
   public void saveUser(Map<String, String> newUser) {
     User user = new User(newUser.get("login"), newUser.get("email"), newUser.get("password"));
-    userStorage.saveUser(user);
+    userStorage.save(user);
   }
 
   public void resetPassword(String login, String oldPassword, String newPassword) {

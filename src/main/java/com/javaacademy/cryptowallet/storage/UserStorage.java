@@ -11,14 +11,14 @@ public class UserStorage {
 
   private final Map<String, User> userBd = new HashMap<>();
 
-  public Optional<User> getUserByLogin(String login) {
-    return Optional.ofNullable(userBd.get(login));
-  }
-
-  public void saveUser(User user) {
+  public void save(User user) {
     if (userBd.containsKey(user.getLogin())) {
       throw new RuntimeException("Пользователь с таким логином уже существует.");
     }
     userBd.put(user.getLogin(), user);
+  }
+
+  public Optional<User> getUserByLogin(String login) {
+    return Optional.ofNullable(userBd.get(login));
   }
 }
