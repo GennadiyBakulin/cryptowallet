@@ -25,9 +25,10 @@ public class CryptoAccountService {
     return cryptoAccountStorage.getAllCryptoAccountUser(loginUser);
   }
 
-  public void create(String loginUser, CryptoCurrency cryptoCurrency) {
+  public CryptoAccount create(String loginUser, CryptoCurrency cryptoCurrency) {
     userService.getUserByLogin(loginUser);
     CryptoAccount cryptoAccount = new CryptoAccount(UUID.randomUUID(), loginUser, cryptoCurrency);
     cryptoAccountStorage.save(cryptoAccount);
+    return cryptoAccount;
   }
 }
