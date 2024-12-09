@@ -25,7 +25,7 @@ public class UserService {
   public void resetPassword(String login, String oldPassword, String newPassword) {
     User user = getUserByLogin(login);
 
-    if (user.getPassword().equals(oldPassword)) {
+    if (!user.getPassword().equals(oldPassword)) {
       throw new RuntimeException("Не верный старый пароль.");
     }
     user.setPassword(newPassword);
