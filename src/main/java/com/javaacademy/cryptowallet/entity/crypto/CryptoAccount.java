@@ -8,13 +8,14 @@ import lombok.Data;
 public class CryptoAccount {
 
   private UUID uuid;
-  private String loginUser;
+  private String userLogin;
   private CryptoCurrency cryptoCurrency;
   private BigDecimal amount = BigDecimal.ZERO;
 
-  public CryptoAccount(UUID uuid, String loginUser, CryptoCurrency cryptoCurrency) {
+  public CryptoAccount(UUID uuid, String userLogin, CryptoCurrency cryptoCurrency) {
     this.uuid = uuid;
-    this.loginUser = loginUser;
+    this.userLogin = userLogin;
     this.cryptoCurrency = cryptoCurrency;
   }
 }
+

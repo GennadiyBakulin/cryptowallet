@@ -10,5 +10,5 @@ public enum CryptoCurrency {
   ETH("ethereum"),
   SOL("solana");
 
-  private final String nameCryptoCurrency;
+  private final String fullName;
 }
