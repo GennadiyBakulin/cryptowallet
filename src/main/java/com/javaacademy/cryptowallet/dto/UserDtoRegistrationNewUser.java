@@ -1,11 +1,11 @@
-package com.javaacademy.cryptowallet.entity;
+package com.javaacademy.cryptowallet.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class User {
+public class UserDtoRegistrationNewUser {
 
   private String login;
   private String email;

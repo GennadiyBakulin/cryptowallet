@@ -1,8 +1,9 @@
 package com.javaacademy.cryptowallet.service;
 
+import com.javaacademy.cryptowallet.dto.UserDtoRegistrationNewUser;
+import com.javaacademy.cryptowallet.dto.UserDtoResetPassword;
 import com.javaacademy.cryptowallet.entity.User;
-import com.javaacademy.cryptowallet.storage.UserStorage;
-import java.util.Map;
+import com.javaacademy.cryptowallet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,24 +11,24 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
-  private final UserStorage userStorage;
+  private final UserRepository userRepository;
+
+  public void saveUser(UserDtoRegistrationNewUser newUser) {
+    User user = new User(newUser.getLogin(), newUser.getEmail(), newUser.getPassword());
+    userRepository.save(user);
+  }
 
   public User getUserByLogin(String login) {
-    return userStorage.getUserByLogin(login)
+    return userRepository.getUserByLogin(login)
         .orElseThrow(() -> new RuntimeException("Пользователя с таким логином нет."));
   }
 
-  public void saveUser(Map<String, String> newUser) {
-    User user = new User(newUser.get("login"), newUser.get("email"), newUser.get("password"));
-    userStorage.save(user);
-  }
+  public void resetPassword(UserDtoResetPassword resetPassword) {
+    User user = getUserByLogin(resetPassword.getLogin());
 
-  public void resetPassword(String login, String oldPassword, String newPassword) {
-    User user = getUserByLogin(login);
-
-    if (!user.getPassword().equals(oldPassword)) {
+    if (!user.getPassword().equals(resetPassword.getOldPassword())) {
       throw new RuntimeException("Не верный старый пароль.");
     }
-    user.setPassword(newPassword);
+    user.setPassword(resetPassword.getNewPassword());
   }
 }
