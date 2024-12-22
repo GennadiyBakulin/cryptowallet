@@ -6,7 +6,7 @@ import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoAccount;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrency;
 import com.javaacademy.cryptowallet.repository.CryptoAccountRepository;
 import com.javaacademy.cryptowallet.service.convert.ConvertCryptocurrencyToUsdService;
-import com.javaacademy.cryptowallet.service.convert.ConvertDollarsToRublesService;
+import com.javaacademy.cryptowallet.service.convert.ConvertBetweenDollarsAndRublesService;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ public class CryptoAccountService {
   private final CryptoAccountRepository cryptoAccountRepository;
   private final UserService userService;
   private final ConvertCryptocurrencyToUsdService convertCryptocurrencyToUsdService;
-  private final ConvertDollarsToRublesService convertDollarsToRublesService;
+  private final ConvertBetweenDollarsAndRublesService convertBetweenDollarsAndRublesService;
 
   public String create(CreateNewCryptoAccountDto newCryptoAccountDto) {
     User user = userService.getUserByLogin(newCryptoAccountDto.getUserLogin());
@@ -58,7 +58,7 @@ public class CryptoAccountService {
     CryptoCurrency cryptoCurrency = cryptoAccount.getCryptoCurrency();
     BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
         .convertCryptocurrencyToUsd(cryptoCurrency);
-    BigDecimal amountDollars = convertDollarsToRublesService.convertRublesToDollars(amountRubles);
+    BigDecimal amountDollars = convertBetweenDollarsAndRublesService.convertRublesToDollars(amountRubles);
     BigDecimal amountCryptoCurrency = amountDollars.divide(currentRateInDollars);
     cryptoAccount.setAmount(cryptoAccount.getAmount().add(amountCryptoCurrency));
   }
@@ -68,7 +68,7 @@ public class CryptoAccountService {
     CryptoCurrency cryptoCurrency = cryptoAccount.getCryptoCurrency();
     BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
         .convertCryptocurrencyToUsd(cryptoCurrency);
-    BigDecimal amountDollars = convertDollarsToRublesService.convertRublesToDollars(amountRubles);
+    BigDecimal amountDollars = convertBetweenDollarsAndRublesService.convertRublesToDollars(amountRubles);
     BigDecimal amountCryptoCurrency = amountDollars.divide(currentRateInDollars);
     if (cryptoAccount.getAmount().compareTo(amountCryptoCurrency) < 0) {
       throw new RuntimeException("На счете %s недостаточно средств.".formatted(uuid));
@@ -84,7 +84,7 @@ public class CryptoAccountService {
     BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
         .convertCryptocurrencyToUsd(cryptoCurrency);
     BigDecimal amountDollars = cryptoAccount.getAmount().multiply(currentRateInDollars);
-    return convertDollarsToRublesService.convertDollarsToRubles(amountDollars);
+    return convertBetweenDollarsAndRublesService.convertDollarsToRubles(amountDollars);
   }
 
   public BigDecimal showBalanceAllAccountsInRubles(String userLogin) throws IOException {

@@ -1,6 +1,6 @@
 package com.javaacademy.cryptowallet.service.convert.impl;
 
-import com.javaacademy.cryptowallet.service.convert.ConvertDollarsToRublesService;
+import com.javaacademy.cryptowallet.service.convert.ConvertBetweenDollarsAndRublesService;
 import com.jayway.jsonpath.JsonPath;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -14,14 +14,15 @@ import org.springframework.stereotype.Service;
 
 @Profile("prod")
 @Service
-public class ConvertDollarsToRublesServiceImpl implements ConvertDollarsToRublesService {
+public class ConvertBetweenDollarsAndRublesServiceImpl implements
+    ConvertBetweenDollarsAndRublesService {
 
   private final OkHttpClient client;
 
   @Value("${api-cbr.url}")
   private String apiUrl;
 
-  public ConvertDollarsToRublesServiceImpl() {
+  public ConvertBetweenDollarsAndRublesServiceImpl() {
     client = new OkHttpClient();
   }
 

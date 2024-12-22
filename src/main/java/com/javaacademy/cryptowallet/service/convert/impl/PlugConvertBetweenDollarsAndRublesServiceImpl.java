@@ -1,6 +1,6 @@
 package com.javaacademy.cryptowallet.service.convert.impl;
 
-import com.javaacademy.cryptowallet.service.convert.ConvertDollarsToRublesService;
+import com.javaacademy.cryptowallet.service.convert.ConvertBetweenDollarsAndRublesService;
 import java.io.IOException;
 import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 
 @Profile("local")
 @Service
-public class PlugConvertDollarsToRublesServiceImpl implements ConvertDollarsToRublesService {
+public class PlugConvertBetweenDollarsAndRublesServiceImpl implements
+    ConvertBetweenDollarsAndRublesService {
 
   @Value("${value-convert-dollars-to-rubles}")
   private BigDecimal value;
