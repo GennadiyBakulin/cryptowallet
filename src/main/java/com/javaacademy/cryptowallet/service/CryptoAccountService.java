@@ -2,8 +2,8 @@ package com.javaacademy.cryptowallet.service;
 
 import com.javaacademy.cryptowallet.dto.cryptoaccount.CreateNewCryptoAccountDto;
 import com.javaacademy.cryptowallet.entity.User;
-import com.javaacademy.cryptowallet.entity.crypto.CryptoAccount;
-import com.javaacademy.cryptowallet.entity.crypto.CryptoCurrency;
+import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoAccount;
+import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrency;
 import com.javaacademy.cryptowallet.repository.CryptoAccountRepository;
 import java.util.Arrays;
 import java.util.List;

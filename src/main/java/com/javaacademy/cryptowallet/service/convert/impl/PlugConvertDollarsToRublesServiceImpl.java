@@ -1,5 +1,6 @@
-package com.javaacademy.cryptowallet.service.convert;
+package com.javaacademy.cryptowallet.service.convert.impl;
 
+import com.javaacademy.cryptowallet.service.convert.ConvertDollarsToRublesService;
 import java.io.IOException;
 import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Value;

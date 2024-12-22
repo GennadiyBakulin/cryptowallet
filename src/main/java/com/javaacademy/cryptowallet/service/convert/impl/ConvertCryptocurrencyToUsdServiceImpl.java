@@ -1,6 +1,7 @@
-package com.javaacademy.cryptowallet.service.convert;
+package com.javaacademy.cryptowallet.service.convert.impl;
 
-import com.javaacademy.cryptowallet.entity.crypto.CryptoCurrency;
+import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrency;
+import com.javaacademy.cryptowallet.service.convert.ConvertCryptocurrencyToUsdService;
 import com.jayway.jsonpath.JsonPath;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -14,8 +15,8 @@ import org.springframework.stereotype.Service;
 
 @Profile("prod")
 @Service
-public class ReceivingValueCryptocurrencyInDollarServiceImpl implements
-    ReceivingValueCryptocurrencyService {
+public class ConvertCryptocurrencyToUsdServiceImpl implements
+    ConvertCryptocurrencyToUsdService {
 
   private final OkHttpClient client;
 
@@ -26,12 +27,12 @@ public class ReceivingValueCryptocurrencyInDollarServiceImpl implements
   @Value("${api-coingecko.header.value}")
   private String headerValue;
 
-  public ReceivingValueCryptocurrencyInDollarServiceImpl() {
+  public ConvertCryptocurrencyToUsdServiceImpl() {
     client = new OkHttpClient();
   }
 
   @Override
-  public BigDecimal getValueCryptocurrencyInDollar(CryptoCurrency cryptoCurrency)
+  public BigDecimal convertCryptocurrencyToUsd(CryptoCurrency cryptoCurrency)
       throws IOException {
     String cryptoCurrencyFullName = cryptoCurrency.getFullName();
     String pathSearch = "/simple/price?ids=%s&vs_currencies=usd".formatted(cryptoCurrencyFullName);

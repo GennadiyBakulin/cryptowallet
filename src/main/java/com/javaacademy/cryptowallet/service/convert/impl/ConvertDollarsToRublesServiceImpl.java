@@ -1,5 +1,6 @@
-package com.javaacademy.cryptowallet.service.convert;
+package com.javaacademy.cryptowallet.service.convert.impl;
 
+import com.javaacademy.cryptowallet.service.convert.ConvertDollarsToRublesService;
 import com.jayway.jsonpath.JsonPath;
 import java.io.IOException;
 import java.math.BigDecimal;

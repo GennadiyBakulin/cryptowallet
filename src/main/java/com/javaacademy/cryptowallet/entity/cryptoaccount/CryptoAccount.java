@@ -1,4 +1,4 @@
-package com.javaacademy.cryptowallet.entity.crypto;
+package com.javaacademy.cryptowallet.entity.cryptoaccount;
 
 import java.math.BigDecimal;
 import java.util.UUID;

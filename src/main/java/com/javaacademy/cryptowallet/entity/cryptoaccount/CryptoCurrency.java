@@ -1,4 +1,4 @@
-package com.javaacademy.cryptowallet.entity.crypto;
+package com.javaacademy.cryptowallet.entity.cryptoaccount;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

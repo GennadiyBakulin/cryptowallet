@@ -1,6 +1,6 @@
 package com.javaacademy.cryptowallet.repository;
 
-import com.javaacademy.cryptowallet.entity.crypto.CryptoAccount;
+import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoAccount;
 import com.javaacademy.cryptowallet.storage.CryptoAccountStorage;
 import java.util.List;
 import java.util.Optional;
