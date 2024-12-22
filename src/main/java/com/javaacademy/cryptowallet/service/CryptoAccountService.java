@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CryptoAccountService {
 
   private final CryptoAccountRepository cryptoAccountRepository;
@@ -59,5 +61,37 @@ public class CryptoAccountService {
     BigDecimal amountDollars = convertDollarsToRublesService.convertRublesToDollars(amountRubles);
     BigDecimal amountCryptoCurrency = amountDollars.divide(currentRateInDollars);
     cryptoAccount.setAmount(cryptoAccount.getAmount().add(amountCryptoCurrency));
+  }
+
+  public void takeRublesFromAccount(UUID uuid, BigDecimal amountRubles) throws IOException {
+    CryptoAccount cryptoAccount = findCryptoAccountByUuid(uuid);
+    CryptoCurrency cryptoCurrency = cryptoAccount.getCryptoCurrency();
+    BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
+        .convertCryptocurrencyToUsd(cryptoCurrency);
+    BigDecimal amountDollars = convertDollarsToRublesService.convertRublesToDollars(amountRubles);
+    BigDecimal amountCryptoCurrency = amountDollars.divide(currentRateInDollars);
+    if (cryptoAccount.getAmount().compareTo(amountCryptoCurrency) < 0) {
+      throw new RuntimeException("На счете %s недостаточно средств.".formatted(uuid));
+    }
+    cryptoAccount.setAmount(cryptoAccount.getAmount().subtract(amountCryptoCurrency));
+    log.info("Операция прошла успешно.\n"
+        + "Продано %s %s.".formatted(amountCryptoCurrency, cryptoCurrency.getFullName()));
+  }
+
+  public BigDecimal showBalanceAccountInRubles(UUID uuid) throws IOException {
+    CryptoAccount cryptoAccount = findCryptoAccountByUuid(uuid);
+    CryptoCurrency cryptoCurrency = cryptoAccount.getCryptoCurrency();
+    BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
+        .convertCryptocurrencyToUsd(cryptoCurrency);
+    BigDecimal amountDollars = cryptoAccount.getAmount().multiply(currentRateInDollars);
+    return convertDollarsToRublesService.convertDollarsToRubles(amountDollars);
+  }
+
+  public BigDecimal showBalanceAllAccountsInRubles(String userLogin) throws IOException {
+    List<CryptoAccount> listCryptoAccountUser = findAllCryptoAccountUser(userLogin);
+
+    return listCryptoAccountUser.stream()
+        .map(CryptoAccount::getAmount)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 }

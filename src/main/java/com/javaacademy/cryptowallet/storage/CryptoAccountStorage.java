@@ -7,9 +7,9 @@ import java.util.UUID;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
+@Getter
 @Component
 public class CryptoAccountStorage {
 
-  @Getter
   private final Map<UUID, CryptoAccount> cryptoAccountBd = new HashMap<>();
 }

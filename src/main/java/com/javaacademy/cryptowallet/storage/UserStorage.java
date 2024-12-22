@@ -6,9 +6,9 @@ import java.util.Map;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
+@Getter
 @Component
 public class UserStorage {
 
-  @Getter
   private final Map<String, User> userBd = new HashMap<>();
 }
