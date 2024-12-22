@@ -5,8 +5,8 @@ import com.javaacademy.cryptowallet.entity.User;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoAccount;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrency;
 import com.javaacademy.cryptowallet.repository.CryptoAccountRepository;
-import com.javaacademy.cryptowallet.service.convert.ConvertCryptocurrencyToUsdService;
 import com.javaacademy.cryptowallet.service.convert.ConvertBetweenDollarsAndRublesService;
+import com.javaacademy.cryptowallet.service.convert.ConvertCryptocurrencyToUsdService;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -53,22 +53,24 @@ public class CryptoAccountService {
     return cryptoAccountRepository.findAllCryptoAccountUser(user.getLogin());
   }
 
-  public void depositAccountOnRubbles(UUID uuid, BigDecimal amountRubles) throws IOException {
+  public void refillAccountOnRubbles(UUID uuid, BigDecimal amountRubles) throws IOException {
     CryptoAccount cryptoAccount = findCryptoAccountByUuid(uuid);
     CryptoCurrency cryptoCurrency = cryptoAccount.getCryptoCurrency();
     BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
         .convertCryptocurrencyToUsd(cryptoCurrency);
-    BigDecimal amountDollars = convertBetweenDollarsAndRublesService.convertRublesToDollars(amountRubles);
+    BigDecimal amountDollars = convertBetweenDollarsAndRublesService.convertRublesToDollars(
+        amountRubles);
     BigDecimal amountCryptoCurrency = amountDollars.divide(currentRateInDollars);
     cryptoAccount.setAmount(cryptoAccount.getAmount().add(amountCryptoCurrency));
   }
 
-  public void takeRublesFromAccount(UUID uuid, BigDecimal amountRubles) throws IOException {
+  public void withdrawalRublesFromAccount(UUID uuid, BigDecimal amountRubles) throws IOException {
     CryptoAccount cryptoAccount = findCryptoAccountByUuid(uuid);
     CryptoCurrency cryptoCurrency = cryptoAccount.getCryptoCurrency();
     BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
         .convertCryptocurrencyToUsd(cryptoCurrency);
-    BigDecimal amountDollars = convertBetweenDollarsAndRublesService.convertRublesToDollars(amountRubles);
+    BigDecimal amountDollars = convertBetweenDollarsAndRublesService.convertRublesToDollars(
+        amountRubles);
     BigDecimal amountCryptoCurrency = amountDollars.divide(currentRateInDollars);
     if (cryptoAccount.getAmount().compareTo(amountCryptoCurrency) < 0) {
       throw new RuntimeException("На счете %s недостаточно средств.".formatted(uuid));
@@ -78,7 +80,7 @@ public class CryptoAccountService {
         .formatted(amountCryptoCurrency, cryptoCurrency.getFullName()));
   }
 
-  public BigDecimal showBalanceAccountInRubles(UUID uuid) throws IOException {
+  public BigDecimal getBalanceAccountInRubles(UUID uuid) throws IOException {
     CryptoAccount cryptoAccount = findCryptoAccountByUuid(uuid);
     CryptoCurrency cryptoCurrency = cryptoAccount.getCryptoCurrency();
     BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
@@ -87,10 +89,16 @@ public class CryptoAccountService {
     return convertBetweenDollarsAndRublesService.convertDollarsToRubles(amountDollars);
   }
 
-  public BigDecimal showBalanceAllAccountsInRubles(String userLogin) throws IOException {
+  public BigDecimal getBalanceAllAccountsInRubles(String userLogin) {
     List<CryptoAccount> listCryptoAccountUser = findAllCryptoAccountUser(userLogin);
     return listCryptoAccountUser.stream()
-        .map(CryptoAccount::getAmount)
+        .map(cryptoAccount -> {
+          try {
+            return getBalanceAccountInRubles(cryptoAccount.getUuid());
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        })
         .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 }
