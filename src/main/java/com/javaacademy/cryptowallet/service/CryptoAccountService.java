@@ -5,6 +5,10 @@ import com.javaacademy.cryptowallet.entity.User;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoAccount;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrency;
 import com.javaacademy.cryptowallet.repository.CryptoAccountRepository;
+import com.javaacademy.cryptowallet.service.convert.ConvertCryptocurrencyToUsdService;
+import com.javaacademy.cryptowallet.service.convert.ConvertDollarsToRublesService;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +22,8 @@ public class CryptoAccountService {
 
   private final CryptoAccountRepository cryptoAccountRepository;
   private final UserService userService;
+  private final ConvertCryptocurrencyToUsdService convertCryptocurrencyToUsdService;
+  private final ConvertDollarsToRublesService convertDollarsToRublesService;
 
   public String create(CreateNewCryptoAccountDto newCryptoAccountDto) {
     User user = userService.getUserByLogin(newCryptoAccountDto.getUserLogin());
@@ -35,13 +41,23 @@ public class CryptoAccountService {
     return newCryptoAccount.getUuid().toString();
   }
 
-  public CryptoAccount getCryptoAccountByUuid(UUID uuid) {
-    return cryptoAccountRepository.getCryptoAccountByUuid(uuid)
-        .orElseThrow(() -> new RuntimeException("Криптосчет с таким uuid не найдено."));
+  public CryptoAccount findCryptoAccountByUuid(UUID uuid) {
+    return cryptoAccountRepository.findCryptoAccountByUuid(uuid)
+        .orElseThrow(() -> new RuntimeException("Криптосчет с таким uuid не найден."));
   }
 
-  public List<CryptoAccount> getAllCryptoAccountUser(String userLogin) {
+  public List<CryptoAccount> findAllCryptoAccountUser(String userLogin) {
     User user = userService.getUserByLogin(userLogin);
-    return cryptoAccountRepository.getAllCryptoAccountUser(user.getLogin());
+    return cryptoAccountRepository.findAllCryptoAccountUser(user.getLogin());
+  }
+
+  public void depositAccountOnRubbles(UUID uuid, BigDecimal amountRubles) throws IOException {
+    CryptoAccount cryptoAccount = findCryptoAccountByUuid(uuid);
+    CryptoCurrency cryptoCurrency = cryptoAccount.getCryptoCurrency();
+    BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
+        .convertCryptocurrencyToUsd(cryptoCurrency);
+    BigDecimal amountDollars = convertDollarsToRublesService.convertRublesToDollars(amountRubles);
+    BigDecimal amountCryptoCurrency = amountDollars.divide(currentRateInDollars);
+    cryptoAccount.setAmount(cryptoAccount.getAmount().add(amountCryptoCurrency));
   }
 }

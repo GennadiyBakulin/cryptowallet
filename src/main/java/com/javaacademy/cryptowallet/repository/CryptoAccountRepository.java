@@ -21,11 +21,11 @@ public class CryptoAccountRepository {
     cryptoAccountBd.getCryptoAccountBd().put(cryptoAccount.getUuid(), cryptoAccount);
   }
 
-  public Optional<CryptoAccount> getCryptoAccountByUuid(UUID uuid) {
+  public Optional<CryptoAccount> findCryptoAccountByUuid(UUID uuid) {
     return Optional.ofNullable(cryptoAccountBd.getCryptoAccountBd().get(uuid));
   }
 
-  public List<CryptoAccount> getAllCryptoAccountUser(String loginUser) {
+  public List<CryptoAccount> findAllCryptoAccountUser(String loginUser) {
     return cryptoAccountBd.getCryptoAccountBd().values().stream()
         .filter(cryptoAccount -> cryptoAccount.getUserLogin().equals(loginUser))
         .toList();

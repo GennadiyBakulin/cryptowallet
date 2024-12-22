@@ -31,6 +31,6 @@ public class CryptoAccountController {
   @ResponseStatus(code = HttpStatus.OK)
   public List<CryptoAccount> getListCryptoAccount(
       @RequestParam(value = "username", required = false) String userLogin) {
-    return cryptoAccountService.getAllCryptoAccountUser(userLogin);
+    return cryptoAccountService.findAllCryptoAccountUser(userLogin);
   }
 }
