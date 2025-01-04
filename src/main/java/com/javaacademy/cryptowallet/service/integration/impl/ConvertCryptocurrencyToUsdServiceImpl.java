@@ -1,7 +1,7 @@
-package com.javaacademy.cryptowallet.service.convert.impl;
+package com.javaacademy.cryptowallet.service.integration.impl;
 
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrency;
-import com.javaacademy.cryptowallet.service.convert.ConvertCryptocurrencyToUsdService;
+import com.javaacademy.cryptowallet.service.integration.ConvertCryptocurrencyToUsdService;
 import com.jayway.jsonpath.JsonPath;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -20,11 +20,11 @@ public class ConvertCryptocurrencyToUsdServiceImpl implements
 
   private final OkHttpClient client;
 
-  @Value("${api-coingecko.url}")
+  @Value("${integration.coingecko.url}")
   private String apiUrl;
-  @Value("${api-coingecko.header.name}")
+  @Value("${integration.coingecko.header.name}")
   private String headerName;
-  @Value("${api-coingecko.header.value}")
+  @Value("${integration.coingecko.header.value}")
   private String headerValue;
 
   public ConvertCryptocurrencyToUsdServiceImpl() {

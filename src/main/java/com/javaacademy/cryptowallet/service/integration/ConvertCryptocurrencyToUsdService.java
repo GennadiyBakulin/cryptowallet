@@ -1,4 +1,4 @@
-package com.javaacademy.cryptowallet.service.convert;
+package com.javaacademy.cryptowallet.service.integration;
 
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrency;
 import java.io.IOException;

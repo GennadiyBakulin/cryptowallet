@@ -1,4 +1,4 @@
-package com.javaacademy.cryptowallet.service.convert;
+package com.javaacademy.cryptowallet.service.integration;
 
 import java.io.IOException;
 import java.math.BigDecimal;

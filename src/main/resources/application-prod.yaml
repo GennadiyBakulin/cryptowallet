@@ -1,8 +1,8 @@
-api-coingecko:
-  url: https://api.coingecko.com/api/v3
-  header:
-    name: x_cg_demo_api_key
-    value: xCVqoMDWXQpoSpqNTCshp5Ua
-
-api-cbr:
-  url: https://www.cbr-xml-daily.ru/latest.js
+integration:
+  coingecko:
+    url: https://api.coingecko.com/api/v3
+    header:
+        name: x_cg_demo_api_key
+        value: xCVqoMDWXQpoSpqNTCshp5Ua
+  cbr:
+    url: https://www.cbr-xml-daily.ru/latest.js

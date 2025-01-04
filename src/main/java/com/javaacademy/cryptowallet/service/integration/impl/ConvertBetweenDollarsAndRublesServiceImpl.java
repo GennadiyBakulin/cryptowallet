@@ -1,6 +1,6 @@
-package com.javaacademy.cryptowallet.service.convert.impl;
+package com.javaacademy.cryptowallet.service.integration.impl;
 
-import com.javaacademy.cryptowallet.service.convert.ConvertBetweenDollarsAndRublesService;
+import com.javaacademy.cryptowallet.service.integration.ConvertBetweenDollarsAndRublesService;
 import com.jayway.jsonpath.JsonPath;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -19,7 +19,7 @@ public class ConvertBetweenDollarsAndRublesServiceImpl implements
 
   private final OkHttpClient client;
 
-  @Value("${api-cbr.url}")
+  @Value("${integration.cbr.url}")
   private String apiUrl;
 
   public ConvertBetweenDollarsAndRublesServiceImpl() {
