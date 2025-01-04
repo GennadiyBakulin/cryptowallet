@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-  public User userDtoToUser(CreateUserDto newUser) {
+  public User convertToUser(CreateUserDto newUser) {
     return new User(newUser.getLogin(), newUser.getEmail(), newUser.getPassword());
   }
 }

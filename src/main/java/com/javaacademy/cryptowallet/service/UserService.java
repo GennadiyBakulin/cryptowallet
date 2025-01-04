@@ -16,7 +16,7 @@ public class UserService {
   private final UserMapper userMapper;
 
   public void saveUser(CreateUserDto newUser) {
-    User user = userMapper.userDtoToUser(newUser);
+    User user = userMapper.convertToUser(newUser);
     userRepository.save(user);
   }
 
