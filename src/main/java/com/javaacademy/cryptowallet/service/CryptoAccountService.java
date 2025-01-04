@@ -1,6 +1,6 @@
 package com.javaacademy.cryptowallet.service;
 
-import com.javaacademy.cryptowallet.dto.cryptoaccount.CreateNewCryptoAccountDto;
+import com.javaacademy.cryptowallet.dto.cryptoaccount.CryptoAccountDto;
 import com.javaacademy.cryptowallet.entity.User;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoAccount;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrency;
@@ -27,7 +27,7 @@ public class CryptoAccountService {
   private final ConvertCryptocurrencyToUsdService convertCryptocurrencyToUsdService;
   private final ConvertBetweenDollarsAndRublesService convertBetweenDollarsAndRublesService;
 
-  public String create(CreateNewCryptoAccountDto newCryptoAccountDto) {
+  public UUID create(CryptoAccountDto newCryptoAccountDto) {
     User user = userService.getUserByLogin(newCryptoAccountDto.getUserLogin());
 
     CryptoCurrency cryptoCurrency = Arrays.stream(CryptoCurrency.values())
@@ -39,8 +39,7 @@ public class CryptoAccountService {
     CryptoAccount newCryptoAccount = new CryptoAccount(UUID.randomUUID(), user.getLogin(),
         cryptoCurrency);
     cryptoAccountRepository.save(newCryptoAccount);
-    System.out.println(newCryptoAccount.getUuid());
-    return newCryptoAccount.getUuid().toString();
+    return newCryptoAccount.getUuid();
   }
 
   public CryptoAccount findCryptoAccountByUuid(UUID uuid) {

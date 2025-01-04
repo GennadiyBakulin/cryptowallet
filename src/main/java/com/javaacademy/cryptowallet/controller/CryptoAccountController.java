@@ -1,7 +1,7 @@
 package com.javaacademy.cryptowallet.controller;
 
 import com.javaacademy.cryptowallet.dto.cryptoaccount.ChangeAmountCryptoAccountDto;
-import com.javaacademy.cryptowallet.dto.cryptoaccount.CreateNewCryptoAccountDto;
+import com.javaacademy.cryptowallet.dto.cryptoaccount.CryptoAccountDto;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoAccount;
 import com.javaacademy.cryptowallet.service.CryptoAccountService;
 import java.io.IOException;
@@ -28,14 +28,14 @@ public class CryptoAccountController {
 
   @PostMapping
   @ResponseStatus(code = HttpStatus.CREATED)
-  public String createCryptoAccount(@RequestBody CreateNewCryptoAccountDto newCryptoAccount) {
+  public UUID createCryptoAccount(@RequestBody CryptoAccountDto newCryptoAccount) {
     return cryptoAccountService.create(newCryptoAccount);
   }
 
   @GetMapping
   @ResponseStatus(code = HttpStatus.OK)
   public List<CryptoAccount> getListCryptoAccount(
-      @RequestParam(value = "username", required = false) String userLogin) {
+      @RequestParam(value = "username") String userLogin) {
     return cryptoAccountService.findAllCryptoAccountUser(userLogin);
   }
 
@@ -61,8 +61,7 @@ public class CryptoAccountController {
 
   @GetMapping("/balance")
   @ResponseStatus(code = HttpStatus.OK)
-  public BigDecimal showBalanceAccountInRubles(@RequestParam("username") String login)
-      throws IOException {
+  public BigDecimal showBalanceAccountInRubles(@RequestParam("username") String login) {
     return cryptoAccountService.getBalanceAllAccountsInRubles(login);
   }
 }

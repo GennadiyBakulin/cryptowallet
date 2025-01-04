@@ -3,7 +3,7 @@ package com.javaacademy.cryptowallet.dto.user;
 import lombok.Data;
 
 @Data
-public class UserDtoRegistrationNewUser {
+public class UserDto {
 
   private final String login;
   private final String email;
