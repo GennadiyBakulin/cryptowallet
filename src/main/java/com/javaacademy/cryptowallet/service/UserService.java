@@ -1,7 +1,7 @@
 package com.javaacademy.cryptowallet.service;
 
-import com.javaacademy.cryptowallet.dto.user.UserDto;
-import com.javaacademy.cryptowallet.dto.user.UserResetPasswordDto;
+import com.javaacademy.cryptowallet.dto.user.CreateUserDto;
+import com.javaacademy.cryptowallet.dto.user.ResetPasswordUserDto;
 import com.javaacademy.cryptowallet.entity.User;
 import com.javaacademy.cryptowallet.mapper.UserMapper;
 import com.javaacademy.cryptowallet.repository.UserRepository;
@@ -15,7 +15,7 @@ public class UserService {
   private final UserRepository userRepository;
   private final UserMapper userMapper;
 
-  public void saveUser(UserDto newUser) {
+  public void saveUser(CreateUserDto newUser) {
     User user = userMapper.userDtoToUser(newUser);
     userRepository.save(user);
   }
@@ -25,7 +25,7 @@ public class UserService {
         .orElseThrow(() -> new RuntimeException("Пользователя с таким логином нет."));
   }
 
-  public void resetPassword(UserResetPasswordDto resetPassword) {
+  public void resetPassword(ResetPasswordUserDto resetPassword) {
     User user = getUserByLogin(resetPassword.getLogin());
 
     if (!user.getPassword().equals(resetPassword.getOldPassword())) {

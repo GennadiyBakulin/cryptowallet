@@ -1,7 +1,7 @@
 package com.javaacademy.cryptowallet.controller;
 
 import com.javaacademy.cryptowallet.dto.cryptoaccount.ChangeAmountCryptoAccountDto;
-import com.javaacademy.cryptowallet.dto.cryptoaccount.CryptoAccountDto;
+import com.javaacademy.cryptowallet.dto.cryptoaccount.CreateCryptoAccountDto;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoAccount;
 import com.javaacademy.cryptowallet.service.CryptoAccountService;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class CryptoAccountController {
 
   @PostMapping
   @ResponseStatus(code = HttpStatus.CREATED)
-  public UUID createCryptoAccount(@RequestBody CryptoAccountDto newCryptoAccount) {
+  public UUID createCryptoAccount(@RequestBody CreateCryptoAccountDto newCryptoAccount) {
     return cryptoAccountService.create(newCryptoAccount);
   }
 

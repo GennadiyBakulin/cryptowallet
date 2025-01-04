@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class CryptoAccountDto {
+public class CreateCryptoAccountDto {
 
   @JsonProperty("username")
   private final String userLogin;

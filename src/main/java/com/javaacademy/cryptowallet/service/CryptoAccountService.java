@@ -1,6 +1,6 @@
 package com.javaacademy.cryptowallet.service;
 
-import com.javaacademy.cryptowallet.dto.cryptoaccount.CryptoAccountDto;
+import com.javaacademy.cryptowallet.dto.cryptoaccount.CreateCryptoAccountDto;
 import com.javaacademy.cryptowallet.entity.User;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoAccount;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrency;
@@ -27,12 +27,12 @@ public class CryptoAccountService {
   private final ConvertCryptocurrencyToUsdService convertCryptocurrencyToUsdService;
   private final ConvertBetweenDollarsAndRublesService convertBetweenDollarsAndRublesService;
 
-  public UUID create(CryptoAccountDto newCryptoAccountDto) {
-    User user = userService.getUserByLogin(newCryptoAccountDto.getUserLogin());
+  public UUID create(CreateCryptoAccountDto newCreateCryptoAccountDto) {
+    User user = userService.getUserByLogin(newCreateCryptoAccountDto.getUserLogin());
 
     CryptoCurrency cryptoCurrency = Arrays.stream(CryptoCurrency.values())
         .filter(currency -> Objects.equals(currency.getFullName(),
-            newCryptoAccountDto.getCryptoType()))
+            newCreateCryptoAccountDto.getCryptoType()))
         .findFirst()
         .orElseThrow(() -> new RuntimeException("Введено наименование неизвестной криптовалюты."));
 
