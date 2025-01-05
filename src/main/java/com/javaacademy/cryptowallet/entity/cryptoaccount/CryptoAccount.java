@@ -9,13 +9,13 @@ public class CryptoAccount {
 
   private UUID uuid;
   private String userLogin;
-  private CryptoCurrency cryptoCurrency;
+  private CryptoCurrencyType cryptoCurrencyType;
   private BigDecimal amount = BigDecimal.ZERO;
 
-  public CryptoAccount(UUID uuid, String userLogin, CryptoCurrency cryptoCurrency) {
+  public CryptoAccount(UUID uuid, String userLogin, CryptoCurrencyType cryptoCurrencyType) {
     this.uuid = uuid;
     this.userLogin = userLogin;
-    this.cryptoCurrency = cryptoCurrency;
+    this.cryptoCurrencyType = cryptoCurrencyType;
   }
 }
 

@@ -1,6 +1,6 @@
 package com.javaacademy.cryptowallet.service.integration.impl;
 
-import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrency;
+import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrencyType;
 import com.javaacademy.cryptowallet.service.integration.ConvertCryptocurrencyToUsdService;
 import com.jayway.jsonpath.JsonPath;
 import java.io.IOException;
@@ -30,9 +30,9 @@ public class ConvertCryptocurrencyToUsdServiceImpl implements
   private String headerValue;
 
   @Override
-  public BigDecimal convertCryptocurrencyToUsd(CryptoCurrency cryptoCurrency)
+  public BigDecimal convertCryptocurrencyToUsd(CryptoCurrencyType cryptoCurrencyType)
       throws IOException {
-    String cryptoCurrencyFullName = cryptoCurrency.getFullName();
+    String cryptoCurrencyFullName = cryptoCurrencyType.getFullName();
     String pathSearch = "/simple/price?ids=%s&vs_currencies=usd".formatted(cryptoCurrencyFullName);
     String path = "$.%s.usd".formatted(cryptoCurrencyFullName);
 

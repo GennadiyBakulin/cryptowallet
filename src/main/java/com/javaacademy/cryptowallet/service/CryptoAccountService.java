@@ -3,7 +3,7 @@ package com.javaacademy.cryptowallet.service;
 import com.javaacademy.cryptowallet.dto.cryptoaccount.CreateCryptoAccountDto;
 import com.javaacademy.cryptowallet.entity.User;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoAccount;
-import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrency;
+import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrencyType;
 import com.javaacademy.cryptowallet.repository.CryptoAccountRepository;
 import com.javaacademy.cryptowallet.service.integration.ConvertBetweenDollarsAndRublesService;
 import com.javaacademy.cryptowallet.service.integration.ConvertCryptocurrencyToUsdService;
@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,16 +29,15 @@ public class CryptoAccountService {
   private final ConvertBetweenDollarsAndRublesService convertBetweenDollarsAndRublesService;
 
   public UUID create(CreateCryptoAccountDto newCreateCryptoAccountDto) {
-    User user = userService.getUserByLogin(newCreateCryptoAccountDto.getUserLogin());
+    User user = userService.getUserByLogin(newCreateCryptoAccountDto.getLogin());
 
-    CryptoCurrency cryptoCurrency = Arrays.stream(CryptoCurrency.values())
-        .filter(currency -> Objects.equals(currency.getFullName(),
-            newCreateCryptoAccountDto.getCryptoType()))
+    CryptoCurrencyType cryptoCurrencyType = Arrays.stream(CryptoCurrencyType.values())
+        .filter(currency -> currency == newCreateCryptoAccountDto.getCryptoCurrencyType())
         .findFirst()
         .orElseThrow(() -> new RuntimeException("Введено наименование неизвестной криптовалюты."));
 
     CryptoAccount newCryptoAccount = new CryptoAccount(UUID.randomUUID(), user.getLogin(),
-        cryptoCurrency);
+        cryptoCurrencyType);
     cryptoAccountRepository.save(newCryptoAccount);
     return newCryptoAccount.getUuid();
   }
@@ -56,9 +54,9 @@ public class CryptoAccountService {
 
   public void refillAccountOnRubbles(UUID uuid, BigDecimal amountRubles) throws IOException {
     CryptoAccount cryptoAccount = findCryptoAccountByUuid(uuid);
-    CryptoCurrency cryptoCurrency = cryptoAccount.getCryptoCurrency();
+    CryptoCurrencyType cryptoCurrencyType = cryptoAccount.getCryptoCurrencyType();
     BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
-        .convertCryptocurrencyToUsd(cryptoCurrency);
+        .convertCryptocurrencyToUsd(cryptoCurrencyType);
     BigDecimal amountDollars = convertBetweenDollarsAndRublesService.convertRublesToDollars(
         amountRubles);
     BigDecimal amountCryptoCurrency = amountDollars.divide(currentRateInDollars, mathContext);
@@ -67,9 +65,9 @@ public class CryptoAccountService {
 
   public void withdrawalRublesFromAccount(UUID uuid, BigDecimal amountRubles) throws IOException {
     CryptoAccount cryptoAccount = findCryptoAccountByUuid(uuid);
-    CryptoCurrency cryptoCurrency = cryptoAccount.getCryptoCurrency();
+    CryptoCurrencyType cryptoCurrencyType = cryptoAccount.getCryptoCurrencyType();
     BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
-        .convertCryptocurrencyToUsd(cryptoCurrency);
+        .convertCryptocurrencyToUsd(cryptoCurrencyType);
     BigDecimal amountDollars = convertBetweenDollarsAndRublesService.convertRublesToDollars(
         amountRubles);
     BigDecimal amountCryptoCurrency = amountDollars.divide(currentRateInDollars, mathContext);
@@ -78,14 +76,14 @@ public class CryptoAccountService {
     }
     cryptoAccount.setAmount(cryptoAccount.getAmount().subtract(amountCryptoCurrency, mathContext));
     log.info("Операция прошла успешно.\nПродано %s %s."
-        .formatted(amountCryptoCurrency, cryptoCurrency.getFullName()));
+        .formatted(amountCryptoCurrency, cryptoCurrencyType.getFullName()));
   }
 
   public BigDecimal getBalanceAccountInRubles(UUID uuid) throws IOException {
     CryptoAccount cryptoAccount = findCryptoAccountByUuid(uuid);
-    CryptoCurrency cryptoCurrency = cryptoAccount.getCryptoCurrency();
+    CryptoCurrencyType cryptoCurrencyType = cryptoAccount.getCryptoCurrencyType();
     BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
-        .convertCryptocurrencyToUsd(cryptoCurrency);
+        .convertCryptocurrencyToUsd(cryptoCurrencyType);
     BigDecimal amountDollars = cryptoAccount.getAmount()
         .multiply(currentRateInDollars, mathContext);
     return convertBetweenDollarsAndRublesService.convertDollarsToRubles(amountDollars);

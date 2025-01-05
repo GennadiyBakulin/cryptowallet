@@ -11,5 +11,5 @@ public class ChangeAmountCryptoAccountDto {
   @JsonProperty("account_id")
   private final UUID uuid;
   @JsonProperty("rubles_amount")
-  private final BigDecimal amountRubles;
+  private final BigDecimal amount;
 }

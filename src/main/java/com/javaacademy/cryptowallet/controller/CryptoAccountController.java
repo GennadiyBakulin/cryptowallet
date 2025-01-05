@@ -65,7 +65,7 @@ public class CryptoAccountController {
   @PostMapping("/refill")
   @ResponseStatus(code = HttpStatus.OK)
   public void refillAccount(@RequestBody ChangeAmountCryptoAccountDto refill) throws IOException {
-    cryptoAccountService.refillAccountOnRubbles(refill.getUuid(), refill.getAmountRubles());
+    cryptoAccountService.refillAccountOnRubbles(refill.getUuid(), refill.getAmount());
   }
 
   @Operation(summary = "Вывод из криптосчета",
@@ -76,13 +76,13 @@ public class CryptoAccountController {
   public void withdrawalFromAccount(@RequestBody ChangeAmountCryptoAccountDto withdrawal)
       throws IOException {
     cryptoAccountService.withdrawalRublesFromAccount(withdrawal.getUuid(),
-        withdrawal.getAmountRubles());
+        withdrawal.getAmount());
   }
 
   @Operation(summary = "Показ рублевого эквивалента криптосчета пользователя",
       description = "Показывает в рублевом эквиваленте криптосчета пользователя по id криптосчета")
   @ApiResponse(responseCode = "200", description = "Успешно", content = {
-      @Content(mediaType = "plain/text", schema = @Schema(implementation = BigDecimal.class))})
+      @Content(mediaType = "application/json", schema = @Schema(implementation = BigDecimal.class))})
   @GetMapping("/balance/{id}")
   @ResponseStatus(code = HttpStatus.OK)
   public BigDecimal showBalanceCryptoAccount(@PathVariable("id") UUID uuid) throws IOException {
@@ -92,7 +92,7 @@ public class CryptoAccountController {
   @Operation(summary = "Показ рублевого эквивалента всех криптосчетов пользователя",
       description = "Показывает в рублевом эквиваленте все криптосчета пользователя")
   @ApiResponse(responseCode = "200", description = "Успешно", content = {
-      @Content(mediaType = "plain/text", schema = @Schema(implementation = BigDecimal.class))})
+      @Content(mediaType = "application/json", schema = @Schema(implementation = BigDecimal.class))})
   @GetMapping("/balance")
   @ResponseStatus(code = HttpStatus.OK)
   public BigDecimal showBalanceAllCryptoAccount(@RequestParam("username") String login) {

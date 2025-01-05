@@ -1,6 +1,6 @@
 package com.javaacademy.cryptowallet.service.integration.impl;
 
-import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrency;
+import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrencyType;
 import com.javaacademy.cryptowallet.service.integration.ConvertCryptocurrencyToUsdService;
 import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,7 @@ public class PlugConvertCryptocurrencyToUsdServiceImpl implements
   private BigDecimal value;
 
   @Override
-  public BigDecimal convertCryptocurrencyToUsd(CryptoCurrency cryptoCurrency) {
+  public BigDecimal convertCryptocurrencyToUsd(CryptoCurrencyType cryptoCurrencyType) {
     return value;
   }
 }
