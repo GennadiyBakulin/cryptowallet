@@ -26,7 +26,7 @@ public class UserController {
       summary = "Регистрация пользователя",
       description = "Регистрирует нового пользователя"
   )
-  @ApiResponse(responseCode = "202", description = "Создан")
+  @ApiResponse(responseCode = "201", description = "Создан")
   @PostMapping("/signup")
   @ResponseStatus(code = HttpStatus.CREATED)
   public void signup(@RequestBody CreateUserDto newUser) {

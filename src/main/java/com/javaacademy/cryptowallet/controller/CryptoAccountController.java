@@ -38,7 +38,7 @@ public class CryptoAccountController {
   @Operation(summary = "Создание криптосчета",
       description = "Создает криптосчет для зарегистрированного пользователя")
   @ApiResponses({
-      @ApiResponse(responseCode = "202", description = "Создан",
+      @ApiResponse(responseCode = "201", description = "Создан",
           content = {@Content(mediaType = "application/json",
               schema = @Schema(implementation = UUID.class))})})
   @PostMapping
