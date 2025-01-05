@@ -1,8 +1,8 @@
 package com.javaacademy.cryptowallet.service.integration.impl;
 
 import com.javaacademy.cryptowallet.service.integration.ConvertBetweenDollarsAndRublesService;
-import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class PlugConvertBetweenDollarsAndRublesServiceImpl implements
   }
 
   @Override
-  public BigDecimal convertRublesToDollars(BigDecimal countRubles) throws IOException {
-    return countRubles.divide(value);
+  public BigDecimal convertRublesToDollars(BigDecimal countRubles) {
+    return countRubles.divide(value, RoundingMode.HALF_EVEN);
   }
 }

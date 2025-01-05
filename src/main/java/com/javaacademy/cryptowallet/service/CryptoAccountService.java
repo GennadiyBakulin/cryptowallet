@@ -9,6 +9,7 @@ import com.javaacademy.cryptowallet.service.integration.ConvertBetweenDollarsAnd
 import com.javaacademy.cryptowallet.service.integration.ConvertCryptocurrencyToUsdService;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class CryptoAccountService {
+
+  private static final MathContext MATH_CONTEXT = new MathContext(7);
 
   private final CryptoAccountRepository cryptoAccountRepository;
   private final UserService userService;
@@ -59,8 +62,9 @@ public class CryptoAccountService {
         .convertCryptocurrencyToUsd(cryptoCurrency);
     BigDecimal amountDollars = convertBetweenDollarsAndRublesService.convertRublesToDollars(
         amountRubles);
-    BigDecimal amountCryptoCurrency = amountDollars.divide(currentRateInDollars);
-    cryptoAccount.setAmount(cryptoAccount.getAmount().add(amountCryptoCurrency));
+    BigDecimal amountCryptoCurrency = amountDollars.divide(currentRateInDollars,
+        MATH_CONTEXT);
+    cryptoAccount.setAmount(cryptoAccount.getAmount().add(amountCryptoCurrency, MATH_CONTEXT));
   }
 
   public void withdrawalRublesFromAccount(UUID uuid, BigDecimal amountRubles) throws IOException {
@@ -70,11 +74,12 @@ public class CryptoAccountService {
         .convertCryptocurrencyToUsd(cryptoCurrency);
     BigDecimal amountDollars = convertBetweenDollarsAndRublesService.convertRublesToDollars(
         amountRubles);
-    BigDecimal amountCryptoCurrency = amountDollars.divide(currentRateInDollars);
+    BigDecimal amountCryptoCurrency = amountDollars.divide(currentRateInDollars,
+        MATH_CONTEXT);
     if (cryptoAccount.getAmount().compareTo(amountCryptoCurrency) < 0) {
       throw new RuntimeException("На счете %s недостаточно средств.".formatted(uuid));
     }
-    cryptoAccount.setAmount(cryptoAccount.getAmount().subtract(amountCryptoCurrency));
+    cryptoAccount.setAmount(cryptoAccount.getAmount().subtract(amountCryptoCurrency, MATH_CONTEXT));
     log.info("Операция прошла успешно.\nПродано %s %s."
         .formatted(amountCryptoCurrency, cryptoCurrency.getFullName()));
   }
@@ -84,7 +89,8 @@ public class CryptoAccountService {
     CryptoCurrency cryptoCurrency = cryptoAccount.getCryptoCurrency();
     BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
         .convertCryptocurrencyToUsd(cryptoCurrency);
-    BigDecimal amountDollars = cryptoAccount.getAmount().multiply(currentRateInDollars);
+    BigDecimal amountDollars = cryptoAccount.getAmount()
+        .multiply(currentRateInDollars, MATH_CONTEXT);
     return convertBetweenDollarsAndRublesService.convertDollarsToRubles(amountDollars);
   }
 

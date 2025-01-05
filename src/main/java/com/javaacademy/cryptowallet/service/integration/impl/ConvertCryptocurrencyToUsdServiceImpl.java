@@ -5,6 +5,7 @@ import com.javaacademy.cryptowallet.service.integration.ConvertCryptocurrencyToU
 import com.jayway.jsonpath.JsonPath;
 import java.io.IOException;
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Request.Builder;
@@ -15,40 +16,37 @@ import org.springframework.stereotype.Service;
 
 @Profile("prod")
 @Service
+@RequiredArgsConstructor
 public class ConvertCryptocurrencyToUsdServiceImpl implements
     ConvertCryptocurrencyToUsdService {
 
   private final OkHttpClient client;
 
   @Value("${integration.coingecko.url}")
-  private String apiUrl;
+  private String url;
   @Value("${integration.coingecko.header.name}")
   private String headerName;
   @Value("${integration.coingecko.header.value}")
   private String headerValue;
-
-  public ConvertCryptocurrencyToUsdServiceImpl() {
-    client = new OkHttpClient();
-  }
 
   @Override
   public BigDecimal convertCryptocurrencyToUsd(CryptoCurrency cryptoCurrency)
       throws IOException {
     String cryptoCurrencyFullName = cryptoCurrency.getFullName();
     String pathSearch = "/simple/price?ids=%s&vs_currencies=usd".formatted(cryptoCurrencyFullName);
-    String pathParseValue = "$['%s']['usd']".formatted(cryptoCurrencyFullName);
+    String path = "$.%s.usd".formatted(cryptoCurrencyFullName);
 
     Request request = new Builder()
-        .url(apiUrl + pathSearch)
-        .get()
+        .url(url + pathSearch)
         .addHeader(headerName, headerValue)
+        .get()
         .build();
 
     Response response = client.newCall(request).execute();
     if (!response.isSuccessful() || response.body() == null) {
-      throw new RuntimeException(
-          "Ошибка получения ответа от сайта https://api.coingecko.com/api/v3");
+      throw new RuntimeException("Ошибка получения ответа от сайта %s".formatted(url));
     }
-    return JsonPath.parse(response.body()).read(JsonPath.compile(pathParseValue), BigDecimal.class);
+
+    return JsonPath.parse(response.body().string()).read(JsonPath.compile(path), BigDecimal.class);
   }
 }
