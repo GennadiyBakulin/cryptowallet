@@ -20,10 +20,10 @@ import org.springframework.stereotype.Service;
 public class ConvertBetweenDollarsAndRublesServiceImpl implements
     ConvertBetweenDollarsAndRublesService {
 
-  private static final String PATH_PARSE = "$.rates.USD";
-  private static final MathContext MATH_CONTEXT = new MathContext(7);
-
+  private final MathContext mathContext;
   private final OkHttpClient client;
+
+  private final String pathParse = "$.rates.USD";
 
   @Value("${integration.cbr.url}")
   private String apiUrl;
@@ -32,14 +32,14 @@ public class ConvertBetweenDollarsAndRublesServiceImpl implements
   public BigDecimal convertDollarsToRubles(BigDecimal countDollars) throws IOException {
     Response response = getResponse(getRequest());
     BigDecimal convertCourse = getConvertCourse(response);
-    return countDollars.divide(convertCourse, MATH_CONTEXT);
+    return countDollars.divide(convertCourse, mathContext);
   }
 
   @Override
   public BigDecimal convertRublesToDollars(BigDecimal countRubles) throws IOException {
     Response response = getResponse(getRequest());
     BigDecimal convertCourse = getConvertCourse(response);
-    return countRubles.multiply(convertCourse, MATH_CONTEXT);
+    return countRubles.multiply(convertCourse, mathContext);
   }
 
   private Request getRequest() {
@@ -60,6 +60,6 @@ public class ConvertBetweenDollarsAndRublesServiceImpl implements
 
   private BigDecimal getConvertCourse(Response response) throws IOException {
     return JsonPath.parse(response.body().string())
-        .read(JsonPath.compile(PATH_PARSE), BigDecimal.class);
+        .read(JsonPath.compile(pathParse), BigDecimal.class);
   }
 }
