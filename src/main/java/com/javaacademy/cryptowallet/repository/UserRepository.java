@@ -1,7 +1,7 @@
 package com.javaacademy.cryptowallet.repository;
 
 import com.javaacademy.cryptowallet.entity.User;
-import com.javaacademy.cryptowallet.storage.UserStorage;
+import com.javaacademy.cryptowallet.storage.user.UserStorage;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -10,16 +10,16 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class UserRepository {
 
-  private final UserStorage userBd;
+  private final UserStorage userStorage;
 
   public void save(User user) {
-    if (userBd.getUserBd().containsKey(user.getLogin())) {
+    if (userStorage.getUserBd().containsKey(user.getLogin())) {
       throw new RuntimeException("Пользователь с таким логином уже существует.");
     }
-    userBd.getUserBd().put(user.getLogin(), user);
+    userStorage.getUserBd().put(user.getLogin(), user);
   }
 
   public Optional<User> getUserByLogin(String login) {
-    return Optional.ofNullable(userBd.getUserBd().get(login));
+    return Optional.ofNullable(userStorage.getUserBd().get(login));
   }
 }
