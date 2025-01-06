@@ -1,6 +1,7 @@
 package com.javaacademy.cryptowallet.configuration;
 
 import java.math.MathContext;
+import java.math.RoundingMode;
 import okhttp3.OkHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,6 @@ public class Config {
 
   @Bean
   public MathContext mathContext() {
-    return new MathContext(precision);
+    return new MathContext(precision, RoundingMode.HALF_EVEN);
   }
 }
