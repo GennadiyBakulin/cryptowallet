@@ -1,9 +1,11 @@
 package com.javaacademy.cryptowallet.service;
 
 import com.javaacademy.cryptowallet.dto.cryptoaccount.CreateCryptoAccountDto;
+import com.javaacademy.cryptowallet.dto.cryptoaccount.CryptoAccountDto;
 import com.javaacademy.cryptowallet.entity.User;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoAccount;
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoCurrencyType;
+import com.javaacademy.cryptowallet.mapper.CryptoAccountMapper;
 import com.javaacademy.cryptowallet.repository.CryptoAccountRepository;
 import com.javaacademy.cryptowallet.service.integration.ConvertBetweenDollarsAndRublesService;
 import com.javaacademy.cryptowallet.service.integration.ConvertCryptocurrencyToUsdService;
@@ -27,6 +29,7 @@ public class CryptoAccountService {
   private final UserService userService;
   private final ConvertCryptocurrencyToUsdService convertCryptocurrencyToUsdService;
   private final ConvertBetweenDollarsAndRublesService convertBetweenDollarsAndRublesService;
+  private final CryptoAccountMapper mapper;
 
   public UUID create(CreateCryptoAccountDto newCreateCryptoAccountDto) {
     User user = userService.getUserByLogin(newCreateCryptoAccountDto.getLogin());
@@ -47,9 +50,13 @@ public class CryptoAccountService {
         .orElseThrow(() -> new RuntimeException("Криптосчет с таким uuid не найден."));
   }
 
-  public List<CryptoAccount> findAllCryptoAccountUser(String userLogin) {
+  public List<CryptoAccountDto> getAllCryptoAccountUser(String userLogin) {
     User user = userService.getUserByLogin(userLogin);
-    return cryptoAccountRepository.findAllCryptoAccountUser(user.getLogin());
+    List<CryptoAccount> allCryptoAccountUser = cryptoAccountRepository.findAllCryptoAccountUser(
+        user.getLogin());
+    return allCryptoAccountUser.stream()
+        .map(mapper::convertToDto)
+        .toList();
   }
 
   public void refillAccountOnRubbles(UUID uuid, BigDecimal amountRubles) throws IOException {
@@ -90,7 +97,8 @@ public class CryptoAccountService {
   }
 
   public BigDecimal getBalanceAllAccountsInRubles(String userLogin) {
-    List<CryptoAccount> listCryptoAccountUser = findAllCryptoAccountUser(userLogin);
+    List<CryptoAccount> listCryptoAccountUser = cryptoAccountRepository.findAllCryptoAccountUser(
+        userLogin);
     return listCryptoAccountUser.stream()
         .map(cryptoAccount -> {
           try {

@@ -2,14 +2,13 @@ package com.javaacademy.cryptowallet.controller;
 
 import com.javaacademy.cryptowallet.dto.cryptoaccount.ChangeAmountCryptoAccountDto;
 import com.javaacademy.cryptowallet.dto.cryptoaccount.CreateCryptoAccountDto;
-import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoAccount;
+import com.javaacademy.cryptowallet.dto.cryptoaccount.CryptoAccountDto;
 import com.javaacademy.cryptowallet.service.CryptoAccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -37,10 +36,9 @@ public class CryptoAccountController {
 
   @Operation(summary = "Создание криптосчета",
       description = "Создает криптосчет для зарегистрированного пользователя")
-  @ApiResponses({
-      @ApiResponse(responseCode = "201", description = "Создан",
-          content = {@Content(mediaType = "application/json",
-              schema = @Schema(implementation = UUID.class))})})
+  @ApiResponse(responseCode = "201", description = "Создан",
+      content = {@Content(mediaType = "application/json",
+          schema = @Schema(implementation = UUID.class))})
   @PostMapping
   @ResponseStatus(code = HttpStatus.CREATED)
   public UUID createCryptoAccount(@RequestBody CreateCryptoAccountDto newCryptoAccount) {
@@ -51,12 +49,12 @@ public class CryptoAccountController {
       description = "Получение всех криптосчетов по логину пользователя")
   @ApiResponse(responseCode = "200", description = "Успешно",
       content = {@Content(mediaType = "application/json",
-          array = @ArraySchema(schema = @Schema(implementation = CryptoAccount.class)))})
+          array = @ArraySchema(schema = @Schema(implementation = CryptoAccountDto.class)))})
   @GetMapping
   @ResponseStatus(code = HttpStatus.OK)
-  public List<CryptoAccount> getListCryptoAccount(
+  public List<CryptoAccountDto> getListCryptoAccount(
       @RequestParam(value = "username") String userLogin) {
-    return cryptoAccountService.findAllCryptoAccountUser(userLogin);
+    return cryptoAccountService.getAllCryptoAccountUser(userLogin);
   }
 
   @Operation(summary = "Пополнение криптосчета",

@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
   private final UserRepository userRepository;
-  private final UserMapper userMapper;
+  private final UserMapper mapper;
 
   public void saveUser(CreateUserDto newUser) {
-    User user = userMapper.convertToUser(newUser);
+    User user = mapper.convertToUser(newUser);
     userRepository.save(user);
   }
 
