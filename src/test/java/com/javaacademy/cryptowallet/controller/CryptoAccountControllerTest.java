@@ -12,6 +12,7 @@ import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
@@ -37,6 +38,8 @@ class CryptoAccountControllerTest {
   @Autowired
   private CryptoAccountStorage cryptoAccountStorage;
 
+  private final User user = new User("user", "email@ya.ru", "password");
+
   private final int port = 8008;
   private final RequestSpecification requestSpecification = new RequestSpecBuilder()
       .setPort(port)
@@ -49,12 +52,15 @@ class CryptoAccountControllerTest {
       .log(LogDetail.ALL)
       .build();
 
+  @PostConstruct
+  public void createUser() {
+    userStorage.getUserBd().put(user.getLogin(), user);
+  }
+
   @Test
   @Order(1)
   @DisplayName("Успешное создание нового криптосчета")
   void createCryptoAccountSuccess() {
-    User user = new User("user", "email@ya.ru", "password");
-    userStorage.getUserBd().put(user.getLogin(), user);
     CreateCryptoAccountDto cryptoAccountDto = new CreateCryptoAccountDto(
         user.getLogin(),
         CryptoCurrencyType.BTC);
