@@ -1,7 +1,7 @@
 package com.javaacademy.cryptowallet.repository;
 
 import com.javaacademy.cryptowallet.entity.cryptoaccount.CryptoAccount;
-import com.javaacademy.cryptowallet.storage.CryptoAccountStorage;
+import com.javaacademy.cryptowallet.storage.cryptoaccount.CryptoAccountStorage;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,21 +12,21 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class CryptoAccountRepository {
 
-  private final CryptoAccountStorage cryptoAccountBd;
+  private final CryptoAccountStorage cryptoAccountStorage;
 
   public void save(CryptoAccount cryptoAccount) {
-    if (cryptoAccountBd.getCryptoAccountBd().containsKey(cryptoAccount.getUuid())) {
+    if (cryptoAccountStorage.getCryptoAccountBd().containsKey(cryptoAccount.getUuid())) {
       throw new RuntimeException("Криптосчет с указанным id уже существует.");
     }
-    cryptoAccountBd.getCryptoAccountBd().put(cryptoAccount.getUuid(), cryptoAccount);
+    cryptoAccountStorage.getCryptoAccountBd().put(cryptoAccount.getUuid(), cryptoAccount);
   }
 
   public Optional<CryptoAccount> findCryptoAccountByUuid(UUID uuid) {
-    return Optional.ofNullable(cryptoAccountBd.getCryptoAccountBd().get(uuid));
+    return Optional.ofNullable(cryptoAccountStorage.getCryptoAccountBd().get(uuid));
   }
 
   public List<CryptoAccount> findAllCryptoAccountUser(String loginUser) {
-    return cryptoAccountBd.getCryptoAccountBd().values().stream()
+    return cryptoAccountStorage.getCryptoAccountBd().values().stream()
         .filter(cryptoAccount -> cryptoAccount.getUserLogin().equals(loginUser))
         .toList();
   }
