@@ -18,6 +18,6 @@ public class Config {
 
   @Bean
   public MathContext mathContext() {
-    return new MathContext(precision, RoundingMode.HALF_EVEN);
+    return new MathContext(precision, RoundingMode.FLOOR);
   }
 }

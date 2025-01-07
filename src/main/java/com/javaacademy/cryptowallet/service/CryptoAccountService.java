@@ -70,7 +70,7 @@ public class CryptoAccountService {
     cryptoAccount.setAmount(cryptoAccount.getAmount().add(amountCryptoCurrency, mathContext));
   }
 
-  public void withdrawalRublesFromAccount(UUID uuid, BigDecimal amountRubles) throws IOException {
+  public String withdrawalRublesFromAccount(UUID uuid, BigDecimal amountRubles) throws IOException {
     CryptoAccount cryptoAccount = findCryptoAccountByUuid(uuid);
     CryptoCurrencyType cryptoCurrencyType = cryptoAccount.getCryptoCurrencyType();
     BigDecimal currentRateInDollars = convertCryptocurrencyToUsdService
@@ -82,8 +82,8 @@ public class CryptoAccountService {
       throw new RuntimeException("На счете %s недостаточно средств.".formatted(uuid));
     }
     cryptoAccount.setAmount(cryptoAccount.getAmount().subtract(amountCryptoCurrency, mathContext));
-    log.info("Операция прошла успешно.\nПродано %s %s."
-        .formatted(amountCryptoCurrency, cryptoCurrencyType.getFullName()));
+    return "Операция прошла успешно. Продано %s %s."
+        .formatted(amountCryptoCurrency, cryptoCurrencyType.getFullName());
   }
 
   public BigDecimal getBalanceAccountInRubles(UUID uuid) throws IOException {

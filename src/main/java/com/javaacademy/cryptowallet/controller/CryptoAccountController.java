@@ -68,12 +68,14 @@ public class CryptoAccountController {
 
   @Operation(summary = "Вывод из криптосчета",
       description = "Вывод из криптосчета суммы указанной в рублевом эквиваленте")
-  @ApiResponse(responseCode = "200", description = "Успешно")
+  @ApiResponse(responseCode = "200", description = "Успешно",
+      content = {
+          @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))})
   @PostMapping("/withdrawal")
   @ResponseStatus(code = HttpStatus.OK)
-  public void withdrawalFromAccount(@RequestBody ChangeAmountCryptoAccountDto withdrawal)
+  public String withdrawalFromAccount(@RequestBody ChangeAmountCryptoAccountDto withdrawal)
       throws IOException {
-    cryptoAccountService.withdrawalRublesFromAccount(withdrawal.getUuid(),
+    return cryptoAccountService.withdrawalRublesFromAccount(withdrawal.getUuid(),
         withdrawal.getAmount());
   }
 
